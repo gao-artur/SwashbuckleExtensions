@@ -6,6 +6,11 @@ namespace SwashbuckleExtensions
 {
     public static class ApplicationBuilderExtensions
     {
+        /// <summary>
+        /// When using service behind ngnix SwaggerUi will be initiated with wrong swagger.json url.
+        /// You can use this extension instead of manually add Swagger and SwaggerUI to overcome this problem.
+        /// </summary>
+        /// <returns></returns>
         public static IApplicationBuilder UseSwaggerWithControllerRoute<T>(this IApplicationBuilder builder,
             string description) where T : Controller
         {

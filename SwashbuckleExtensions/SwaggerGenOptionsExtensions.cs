@@ -6,26 +6,30 @@ namespace SwashbuckleExtensions
 {
     public static class SwaggerGenOptionsExtensions
     {
-        public static void ApplyCorrelationIdHeaderOperationFilter(this SwaggerGenOptions options)
+        public static void AddHeaderToAllEndpoints(this SwaggerGenOptions options, string headerName, object defaultValue, bool required = false)
         {
-            options.OperationFilter<CorrelationIdHeaderOperationFilter>();
+            options.OperationFilter<HeaderOperationFilter>(headerName, defaultValue, required);
         }
 
         public static void ApplyFileResponseOperationFilter(this SwaggerGenOptions options)
         {
             options.OperationFilter<FileResponseOperationFilter>();
         }
-        
-        public static void ApplyNullableTypeSchemaFilter(this SwaggerGenOptions options)
+
+        /// <summary>
+        /// Add 'x-nullable=false' extension to all nit nullable value types.
+        /// </summary>
+        public static void MakeValueTypesNotNullable(this SwaggerGenOptions options)
         {
             options.SchemaFilter<NullableTypeSchemaFilter>();
         }
 
         /// <summary>
-        /// Be sure you don't use DescribeAllEnumsAsStrings method with ApplyEnumTypeSchemaFilter
+        /// Generate enum types instead of strings or integers.
+        /// Be sure you don't use DescribeAllEnumsAsStrings method with GenerateEnums.
         /// </summary>
         /// <param name="options"></param>
-        public static void ApplyEnumTypeSchemaFilter(this SwaggerGenOptions options)
+        public static void GenerateEnums(this SwaggerGenOptions options)
         {
             options.SchemaFilter<EnumTypeSchemaFilter>();
         }
@@ -48,6 +52,9 @@ namespace SwashbuckleExtensions
             options.DocumentFilter<DateTimeRequiredDocumentFilter>();
         }
 
+        /// <summary>
+        /// Set empty guid as example for guid types in SwaggerUI.
+        /// </summary>
         public static void MapGuids(this SwaggerGenOptions options)
         {
             options.MapType<Guid>(() => new Schema { Type = "string", Format = "uuid", Example = Guid.Empty });
